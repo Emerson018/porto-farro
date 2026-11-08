@@ -446,92 +446,128 @@ section{padding:72px 0}
 .card.hide{display:none}
 
 
-/* COMPACT & BALANCED VIEWPORT SECTIONS (PREVENTS CUTOFF WHEN NAVIGATING) */
-#reviews, #hours, #locator, #mission, #faq {
-  padding: 24px 0 36px;
-}
-#reviews .h-lg, #hours .h-lg, #locator .h-lg, #mission .h-lg, #faq .h-lg {
-  font-size: clamp(28px, 3.4vw, 42px);
-  line-height: 1.05;
-  margin-top: 4px;
-}
-#reviews .center p, #hours .center p, #locator .wrap > p {
-  margin-top: 6px !important;
-  font-size: 14px !important;
-  line-height: 1.4 !important;
+/* DEDICATED FULL-VIEWPORT SECTIONS (EACH SECTION ACTS AS A FULL, IMMERSIVE PAGE WITHOUT OVERLAPPING) */
+#mission, #reviews, #hours, #faq, #locator {
+  min-height: calc(100vh - 64px);
+  min-height: calc(100dvh - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 60px 0;
+  position: relative;
 }
 
-/* Reviews compactness */
+#mission > .wrap, #reviews > .wrap, #hours > .wrap, #faq > .wrap, #locator > .wrap {
+  width: 100%;
+}
+
+/* Headings & Subtitles for Dedicated Sections */
+#mission .h-lg, #reviews .h-lg, #hours .h-lg, #faq .h-lg, #locator .h-lg {
+  font-size: clamp(34px, 4.2vw, 54px);
+  line-height: 1.08;
+  margin-top: 8px;
+  letter-spacing: .02em;
+}
+
+#mission .center p, #reviews .center p, #hours .center p, #locator .wrap > p {
+  margin-top: 12px !important;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  color: var(--blush) !important;
+}
+
+/* Reviews - Generous & Balanced Scale */
 #reviews .rep-box {
-  margin-top: 16px;
-  padding: 18px 24px;
-  gap: 24px;
+  margin-top: 28px;
+  padding: 32px 40px;
+  gap: 36px;
+  background: rgba(38,2,18,.8);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--r-feature);
 }
 #reviews .rep-box .rep-number {
-  font-size: clamp(42px, 5vw, 56px);
+  font-size: clamp(48px, 6vw, 68px);
 }
 #reviews .rep-box blockquote {
-  font-size: 18px !important;
-  line-height: 1.35 !important;
+  font-size: clamp(20px, 2vw, 24px) !important;
+  line-height: 1.4 !important;
+  font-weight: 600 !important;
+  color: var(--white) !important;
 }
 #reviews .rep-box p {
-  margin-top: 6px !important;
-  font-size: 13.5px !important;
-  line-height: 1.4 !important;
+  margin-top: 10px !important;
+  font-size: 15px !important;
+  line-height: 1.55 !important;
 }
 #reviews .rep-grid {
-  margin-top: 16px;
-  gap: 14px;
-}
-#reviews .rep-card {
-  padding: 14px 18px;
-}
-#reviews .rep-card .quote {
-  font-size: 13px;
-  line-height: 1.4;
-}
-#reviews .rep-card .author {
-  margin-top: 10px;
-  font-size: 12px;
-}
-
-/* Hours compactness */
-#hours .hours-grid {
-  margin-top: 16px;
+  margin-top: 24px;
   gap: 20px;
 }
-#hours .hours-card {
-  padding: 18px 22px;
+#reviews .rep-card {
+  padding: 22px 26px;
+  background: var(--burgundy);
+  border-radius: var(--r-card);
 }
-#hours .hours-card h3 {
-  font-size: 17px !important;
-  margin-bottom: 12px !important;
+#reviews .rep-card .quote {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--white);
 }
-#hours .hours-list {
-  gap: 4px;
-}
-#hours .hours-item {
-  padding: 6px 0;
-  font-size: 13.5px;
-}
-#hours .hours-highlight {
-  padding: 20px 22px;
-  gap: 10px;
-}
-#hours .hours-highlight h3 {
-  font-size: 19px !important;
-  line-height: 1.25 !important;
-}
-#hours .hours-highlight p {
-  font-size: 13.5px !important;
-  line-height: 1.4 !important;
-  margin-top: 4px;
+#reviews .rep-card .author {
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 700;
 }
 
-/* Locator compactness */
+/* Hours - Full Schedule with Clear Separation */
+#hours .hours-grid {
+  margin-top: 28px;
+  gap: 32px;
+  align-items: stretch;
+}
+#hours .hours-card {
+  padding: 28px 34px;
+  background: var(--burgundy);
+  border-radius: var(--r-feature);
+}
+#hours .hours-card h3 {
+  font-size: 21px !important;
+  font-weight: 700 !important;
+  margin-bottom: 16px !important;
+  color: var(--white) !important;
+}
+#hours .hours-list {
+  gap: 8px;
+}
+#hours .hours-item {
+  padding: 8px 0;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(255,199,198,.15);
+}
+#hours .hours-highlight {
+  padding: 32px;
+  gap: 16px;
+  border-radius: var(--r-feature);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#hours .hours-highlight h3 {
+  font-size: clamp(22px, 2.2vw, 28px) !important;
+  line-height: 1.35 !important;
+}
+#hours .hours-highlight p {
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+}
+
+/* Locator - Monumental Map Frame */
 #locator .map-embed-wrap {
-  margin-top: 16px;
-  height: clamp(280px, 42vh, 380px);
+  margin-top: 24px;
+  height: clamp(340px, 48vh, 480px);
+  border-radius: var(--r-feature);
 }
 
 /* CUSHION PILLOW SHAPE BEHIND PHOTO - UNIFORM COMPACT SIZE FOR ALL CARDS */
@@ -2034,8 +2070,7 @@ footer a:hover{color:var(--white);text-decoration:underline}
         var targetTop = rect.top + window.pageYOffset;
         
         // Offset customizado: para o cardápio, posiciona suavemente com os cards em destaque
-        var offset = (targetId === '#menu') ? 8 : 16;
-        var scrollPos = Math.max(0, targetTop - navHeight - offset);
+        var scrollPos = Math.max(0, targetTop - navHeight);
         
         window.scrollTo({
           top: scrollPos,
