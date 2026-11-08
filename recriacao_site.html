@@ -445,6 +445,95 @@ section{padding:72px 0}
 }
 .card.hide{display:none}
 
+
+/* COMPACT & BALANCED VIEWPORT SECTIONS (PREVENTS CUTOFF WHEN NAVIGATING) */
+#reviews, #hours, #locator, #mission, #faq {
+  padding: 24px 0 36px;
+}
+#reviews .h-lg, #hours .h-lg, #locator .h-lg, #mission .h-lg, #faq .h-lg {
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.05;
+  margin-top: 4px;
+}
+#reviews .center p, #hours .center p, #locator .wrap > p {
+  margin-top: 6px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+/* Reviews compactness */
+#reviews .rep-box {
+  margin-top: 16px;
+  padding: 18px 24px;
+  gap: 24px;
+}
+#reviews .rep-box .rep-number {
+  font-size: clamp(42px, 5vw, 56px);
+}
+#reviews .rep-box blockquote {
+  font-size: 18px !important;
+  line-height: 1.35 !important;
+}
+#reviews .rep-box p {
+  margin-top: 6px !important;
+  font-size: 13.5px !important;
+  line-height: 1.4 !important;
+}
+#reviews .rep-grid {
+  margin-top: 16px;
+  gap: 14px;
+}
+#reviews .rep-card {
+  padding: 14px 18px;
+}
+#reviews .rep-card .quote {
+  font-size: 13px;
+  line-height: 1.4;
+}
+#reviews .rep-card .author {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+/* Hours compactness */
+#hours .hours-grid {
+  margin-top: 16px;
+  gap: 20px;
+}
+#hours .hours-card {
+  padding: 18px 22px;
+}
+#hours .hours-card h3 {
+  font-size: 17px !important;
+  margin-bottom: 12px !important;
+}
+#hours .hours-list {
+  gap: 4px;
+}
+#hours .hours-item {
+  padding: 6px 0;
+  font-size: 13.5px;
+}
+#hours .hours-highlight {
+  padding: 20px 22px;
+  gap: 10px;
+}
+#hours .hours-highlight h3 {
+  font-size: 19px !important;
+  line-height: 1.25 !important;
+}
+#hours .hours-highlight p {
+  font-size: 13.5px !important;
+  line-height: 1.4 !important;
+  margin-top: 4px;
+}
+
+/* Locator compactness */
+#locator .map-embed-wrap {
+  margin-top: 16px;
+  height: clamp(280px, 42vh, 380px);
+}
+
 /* CUSHION PILLOW SHAPE BEHIND PHOTO - UNIFORM COMPACT SIZE FOR ALL CARDS */
 .pack{
   width:100%;
@@ -1620,9 +1709,8 @@ footer a:hover{color:var(--white);text-decoration:underline}
 <section class="mission" id="mission">
   <div class="wrap">
     <span class="eyebrow rv-eyebrow">Nossa Identidade</span>
-    <h2 class="h-lg rv-title" style="margin-top:20px">
-      <span class="title-mask"><span class="title-line">O Pavilhão</span></span>
-      <span class="title-mask"><span class="title-line">Farrô</span></span>
+    <h2 class="h-lg rv-title" style="margin-top:4px">
+      <span class="title-mask"><span class="title-line">O Pavilhão Farrô</span></span>
     </h2>
     <div class="cols">
       <div>
@@ -1644,9 +1732,8 @@ footer a:hover{color:var(--white);text-decoration:underline}
   <div class="wrap">
     <div class="center">
       <span class="eyebrow rv-eyebrow">Confiança & Excelência Verificada</span>
-      <h2 class="h-lg rv-title" style="margin-top:16px">
-        <span class="title-mask"><span class="title-line">Reputação</span></span>
-        <span class="title-mask"><span class="title-line">Comprovada</span></span>
+      <h2 class="h-lg rv-title" style="margin-top:4px">
+        <span class="title-mask"><span class="title-line">Reputação Comprovada</span></span>
       </h2>
       <p style="margin-top:20px;color:var(--blush);max-width:58ch;margin-inline:auto">
         A prova social de quem frequenta, ama e recomenda o Porto Farrô todos os dias no coração de Porto Alegre.
@@ -1703,9 +1790,8 @@ footer a:hover{color:var(--white);text-decoration:underline}
   <div class="wrap">
     <div class="center">
       <span class="eyebrow rv-eyebrow">Planeje sua visita</span>
-      <h2 class="h-lg rv-title" style="margin-top:16px">
-        <span class="title-mask"><span class="title-line">Horários de</span></span>
-        <span class="title-mask"><span class="title-line">Operação</span></span>
+      <h2 class="h-lg rv-title" style="margin-top:4px">
+        <span class="title-mask"><span class="title-line">Horários de Operação</span></span>
       </h2>
       <p style="margin-top:20px;color:var(--blush);max-width:54ch;margin-inline:auto">
         Estamos abertos todos os dias para te receber com café recém-passado e comidinhas preparadas na hora.
@@ -1820,9 +1906,8 @@ footer a:hover{color:var(--white);text-decoration:underline}
 <section class="loc center" id="locator">
   <div class="wrap">
     <span class="eyebrow rv-eyebrow">Como chegar até nós</span>
-    <h2 class="h-lg rv-title" style="margin-top:16px">
-      <span class="title-mask"><span class="title-line">Localização</span></span>
-      <span class="title-mask"><span class="title-line">& Google Maps</span></span>
+    <h2 class="h-lg rv-title" style="margin-top:4px">
+      <span class="title-mask"><span class="title-line">Localização & Google Maps</span></span>
     </h2>
     
     <p style="margin-top:20px;color:var(--blush);max-width:58ch;margin-inline:auto;font-size:18px">
