@@ -92,7 +92,8 @@ section{padding:72px 0}
 
 
 
-/* HERO DESKTOP: MONUMENTAL HORIZONTAL PORTO FARRÔ COM XÍCARA CENTRAL */
+
+/* HERO MONUMENTAL: PORTO EM CIMA, XÍCARA NO MEIO, FARRÔ EM BAIXO */
 .hero-monumental{
   position:relative;
   background:radial-gradient(circle at 50% 50%, #3a031c 0%, var(--black) 85%);
@@ -103,14 +104,14 @@ section{padding:72px 0}
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  padding:30px 16px;
+  padding:24px 16px;
   text-align:center;
   box-sizing:border-box;
   user-select:none;
 }
 
 .hero-monumental .eyebrow{
-  margin-bottom:clamp(18px, 3vw, 36px);
+  margin-bottom:clamp(12px, 2vw, 24px);
   color:var(--blush);
   font-size:clamp(12px, 1.4vw, 15px);
   letter-spacing:.12em;
@@ -118,57 +119,59 @@ section{padding:72px 0}
   font-weight:700;
   display:block;
   position:relative;
-  z-index:3;
+  z-index:4;
 }
 
-/* DESKTOP LAYOUT (Default: horizontal PORTO FARRÔ with cup in center) */
-.hero-desktop-stage{
+/* DESKTOP STACK: PORTO (topo) -> XÍCARA 3D (centro) -> FARRÔ (baixo) */
+.hero-stacked-stage{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   position:relative;
+  z-index:2;
+  user-select:none;
   width:100%;
   max-width:1400px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin:clamp(8px, 2vw, 20px) 0;
 }
 
-.hero-monumental-track{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.hero-word-top, .hero-word-bottom{
+  font-family:var(--display);
+  font-size:clamp(76px, 13vw, 185px);
+  font-weight:700;
+  line-height:0.82;
+  text-transform:uppercase;
+  letter-spacing:0.03em;
   position:relative;
   z-index:1;
-}
-
-.hero-monumental-title{
-  font-family:var(--display);
-  font-size:clamp(60px, 14.5vw, 195px);
-  font-weight:700;
-  line-height:0.95;
-  color:var(--red);
-  text-transform:uppercase;
-  letter-spacing:0.02em;
-  white-space:nowrap;
+  text-shadow:0 16px 40px rgba(0,0,0,0.85);
   margin:0;
-  display:inline-block;
-  text-shadow:0 14px 40px rgba(0,0,0,0.85);
-  transition:transform .4s cubic-bezier(.16,1,.3,1);
+  display:block;
+  transition:transform .3s ease;
 }
 
-.hero-monumental:hover .hero-monumental-title{
-  transform:scale(1.02);
+.hero-word-top{
+  color:var(--white);
 }
 
-.hero-monumental-cup{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -46%);
-  z-index:2;
-  width:clamp(220px, 30vw, 420px);
+.hero-word-bottom{
+  color:var(--red);
+}
+
+.hero-stacked-stage:hover .hero-word-top{
+  transform:translateY(-2px);
+}
+.hero-stacked-stage:hover .hero-word-bottom{
+  transform:translateY(2px);
+}
+
+.hero-cup-centered{
+  position:relative;
+  width:clamp(200px, 25vw, 360px);
+  height:clamp(200px, 25vw, 360px);
   aspect-ratio:1;
-  pointer-events:none;
+  margin:clamp(-45px, -5vw, -75px) 0;
+  z-index:3;
   filter:drop-shadow(0 24px 50px rgba(0,0,0,0.92));
   transition:transform .2s ease-out;
 }
@@ -187,9 +190,9 @@ section{padding:72px 0}
   100% { transform: translateY(0px) rotate(0deg); }
 }
 
-/* MOBILE LAYOUT: ARCO CURVADO ABRAÇANDO A XÍCARA */
-.hero-mobile-stage{
-  display:none; /* Shown only on mobile screens */
+/* MOBILE SEAL: PORTO EM CIMA E FARRÔ EM BAIXO FORMANDO ARCOS QUE ABRAÇAM A XÍCARA */
+.hero-mobile-seal{
+  display:none;
   position:relative;
   width:min(90vw, 360px);
   height:min(90vw, 360px);
@@ -198,7 +201,7 @@ section{padding:72px 0}
   margin:10px auto;
 }
 
-.hero-mobile-arc-svg{
+.hero-seal-svg{
   position:absolute;
   inset:0;
   width:100%;
@@ -206,27 +209,36 @@ section{padding:72px 0}
   overflow:visible;
   pointer-events:none;
   z-index:3;
-  filter:drop-shadow(0 6px 18px rgba(0,0,0,0.7));
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,0.75));
 }
 
-.hero-mobile-arc-text{
+.seal-text-top{
   font-family:var(--display);
-  font-size:38px;
+  font-size:46px;
   font-weight:700;
-  letter-spacing:5px;
+  letter-spacing:7px;
+  fill:var(--white);
+  text-transform:uppercase;
+}
+
+.seal-text-bottom{
+  font-family:var(--display);
+  font-size:46px;
+  font-weight:700;
+  letter-spacing:7px;
   fill:var(--red);
   text-transform:uppercase;
 }
 
-.hero-mobile-cup{
-  width:64%;
-  height:64%;
+.seal-cup-wrap{
+  width:62%;
+  height:62%;
   position:relative;
   z-index:2;
   filter:drop-shadow(0 20px 42px rgba(0,0,0,0.92));
 }
 
-.hero-mobile-cup img{
+.seal-cup-wrap img{
   width:100%;
   height:100%;
   object-fit:contain;
@@ -234,16 +246,16 @@ section{padding:72px 0}
   animation:heroCupFloat 6s ease-in-out infinite alternate;
 }
 
-/* Responsividade: alternar entre Desktop e Mobile no breakpoint 768px */
+/* RESPONSIVIDADE (768px): Alternar entre Desktop e Mobile */
 @media (max-width: 768px){
-  .hero-desktop-stage{
+  .hero-stacked-stage{
     display:none !important;
   }
-  .hero-mobile-stage{
+  .hero-mobile-seal{
     display:flex !important;
   }
   .hero-monumental .eyebrow{
-    margin-bottom:20px;
+    margin-bottom:18px;
     font-size:12px;
   }
 }
@@ -1210,27 +1222,35 @@ footer a:hover{color:var(--white);text-decoration:underline}
     <span class="eyebrow rv-eyebrow">Cafés Especiais • Arte Urbana • Gastronomia Afetiva</span>
   </div>
 
-  <!-- LAYOUT DESKTOP: PORTO FARRÔ COM XÍCARA CENTRAL EM 3D -->
-  <div class="hero-desktop-stage" id="hero-desktop-stage">
-    <div class="hero-monumental-track">
-      <h1 class="hero-monumental-title">PORTO FARRÔ</h1>
-    </div>
-    <div class="hero-monumental-cup" id="hero-cup-interactive">
+  <!-- DESKTOP: PORTO EM CIMA, XÍCARA NO MEIO, FARRÔ EM BAIXO -->
+  <div class="hero-stacked-stage" id="hero-stacked-stage">
+    <h1 class="hero-word-top">PORTO</h1>
+    <div class="hero-cup-centered" id="hero-cup-interactive">
       <img src="foto_xicara.png" alt="Xícara de Café Especial Latte Art Porto Farrô" class="hero-cup-img" loading="eager" width="480" height="480">
     </div>
+    <div class="hero-word-bottom">FARRÔ</div>
   </div>
 
-  <!-- LAYOUT MOBILE: PORTO FARRÔ FORMANDO UM ARCO CURVADO ABRAÇANDO A XÍCARA -->
-  <div class="hero-mobile-stage" id="hero-mobile-stage" aria-label="Porto Farrô">
-    <svg class="hero-mobile-arc-svg" viewBox="0 0 360 360" aria-hidden="true">
-      <path id="mobileHeroArc" d="M 28,235 A 152,152 0 1,1 332,235" fill="none" />
-      <text class="hero-mobile-arc-text">
-        <textPath href="#mobileHeroArc" startOffset="50%" text-anchor="middle">
-          PORTO FARRÔ
+  <!-- MOBILE: PORTO EM ARCO SUPERIOR, XÍCARA NO MEIO, FARRÔ EM ARCO INFERIOR -->
+  <div class="hero-mobile-seal" id="hero-mobile-seal" aria-label="Porto Farrô">
+    <svg class="hero-seal-svg" viewBox="0 0 360 360" aria-hidden="true">
+      <!-- Arco Superior: PORTO abraçando por cima da xícara -->
+      <path id="sealTopArc" d="M 38,185 A 142,142 0 1,1 322,185" fill="none" />
+      <text class="seal-text-top">
+        <textPath href="#sealTopArc" startOffset="50%" text-anchor="middle">
+          PORTO
+        </textPath>
+      </text>
+
+      <!-- Arco Inferior: FARRÔ abraçando por baixo da xícara -->
+      <path id="sealBottomArc" d="M 38,175 A 142,142 0 0,0 322,175" fill="none" />
+      <text class="seal-text-bottom">
+        <textPath href="#sealBottomArc" startOffset="50%" text-anchor="middle">
+          FARRÔ
         </textPath>
       </text>
     </svg>
-    <div class="hero-mobile-cup">
+    <div class="seal-cup-wrap">
       <img src="foto_xicara.png" alt="Xícara de Café Especial Latte Art Porto Farrô" loading="eager" width="480" height="480">
     </div>
   </div>
@@ -2459,18 +2479,18 @@ footer a:hover{color:var(--white);text-decoration:underline}
   rvTitles.forEach(function(el){ observer.observe(el); });
   rvEyebrows.forEach(function(el){ observer.observe(el); });
 
-  // 1. Hero Cup interactive 3D mouse parallax (Desktop)
+  // 1. Hero Cup interactive 3D mouse parallax (Desktop: Cup between PORTO & FARRÔ)
   var heroSection = document.getElementById('hero-section');
   var heroCup = document.getElementById('hero-cup-interactive');
   if(heroSection && heroCup){
     heroSection.addEventListener('mousemove', function(e){
       var rect = heroSection.getBoundingClientRect();
-      var x = ((e.clientX - rect.left) / rect.width - 0.5) * 24;
-      var y = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
-      heroCup.style.transform = 'translate(calc(-50% + ' + x.toFixed(2) + 'px), calc(-46% + ' + y.toFixed(2) + 'px))';
+      var x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
+      var y = ((e.clientY - rect.top) / rect.height - 0.5) * 16;
+      heroCup.style.transform = 'translate3d(' + x.toFixed(2) + 'px, ' + y.toFixed(2) + 'px, 0)';
     }, {passive: true});
     heroSection.addEventListener('mouseleave', function(){
-      heroCup.style.transform = 'translate(-50%, -46%)';
+      heroCup.style.transform = 'translate3d(0, 0, 0)';
     });
   }
 
