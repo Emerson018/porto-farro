@@ -652,15 +652,18 @@ section{padding:72px 0}
   gap:24px;
   overflow-x:auto;
   scroll-snap-type:x mandatory;
-  padding:20px 10px 30px;
-  scrollbar-width:none;
   scroll-behavior:smooth;
+  padding:20px max(48px, calc(50% - min(185px, 42vw))) 30px;
+  scrollbar-width:none;
   -webkit-overflow-scrolling:touch;
 }
-.car::-webkit-scrollbar{display:none}
-
 .card{
-  flex:0 0 min(370px,84vw);
+  flex:0 0 min(370px, 84vw);
+  width:min(370px, 84vw);
+  min-width:min(370px, 84vw);
+  max-width:min(370px, 84vw);
+  min-height:480px;
+  box-sizing:border-box;
   scroll-snap-align:center;
   background:var(--burgundy);
   border:1px solid rgba(0,0,0,.6);
@@ -673,11 +676,7 @@ section{padding:72px 0}
   position:relative;
   text-align:left;
 }
-.card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 18px 36px rgba(0,0,0,.6);
-}
-.card.hide{display:none}
+.card.hide{display:none !important}
 
 
 /* DEDICATED FULL-VIEWPORT SECTIONS (EACH SECTION ACTS AS A FULL, IMMERSIVE PAGE WITHOUT OVERLAPPING) */
@@ -2298,8 +2297,7 @@ footer a:hover{color:var(--white);text-decoration:underline}
     });
   }
 
-  
-  // Centralized Smooth Scrolling for all internal anchor links (prevents cutoff and centers content)
+  // Centralized Smooth Scrolling for internal anchor links
   document.querySelectorAll('a[href^="#"]').forEach(function(anchor){
     anchor.addEventListener('click', function(e){
       var targetId = this.getAttribute('href');
@@ -2313,14 +2311,11 @@ footer a:hover{color:var(--white);text-decoration:underline}
       var target = document.querySelector(targetId);
       if(target){
         e.preventDefault();
-        var mobileNav = document.getElementById('mobile-nav');
-        var menuBtn = document.getElementById('menu-toggle');
         if(mobileNav && mobileNav.classList.contains('open')){
           mobileNav.classList.remove('open');
           if(menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
         }
 
-        // Force entrance animation immediately so headings and text are 100% visible
         target.classList.add('in');
         var nestedLines = target.querySelectorAll('.title-line, .rv-eyebrow, .rv-title');
         nestedLines.forEach(function(el){ el.classList.add('in'); });
@@ -2328,8 +2323,6 @@ footer a:hover{color:var(--white);text-decoration:underline}
         var navHeight = 64;
         var rect = target.getBoundingClientRect();
         var targetTop = rect.top + window.pageYOffset;
-        
-        // Offset customizado: para o cardápio, posiciona suavemente com os cards em destaque
         var scrollPos = Math.max(0, targetTop - navHeight);
         
         window.scrollTo({
@@ -2344,148 +2337,7 @@ footer a:hover{color:var(--white);text-decoration:underline}
     });
   });
 
-  // CAROUSEL CATALOG (IMPOSSIBLE FOODS STYLE)
-  var car = document.getElementById('catalog-carousel');
-  var prevBtn = document.getElementById('car-prev');
-  var nextBtn = document.getElementById('car-next');
-  var catTabs = document.querySelectorAll('.cat-tab');
-  var dotsContainer = document.getElementById('carousel-dots');
-  var cards = car ? [].slice.call(car.querySelectorAll('.card')) : [];
-
-  function getVisibleCards(){
-    return cards.filter(function(c){ return !c.classList.contains('hide'); });
-  }
-
-  function updateDots(){
-    if(!dotsContainer || !car) return;
-    dotsContainer.innerHTML = '';
-    var vis = getVisibleCards();
-    if(vis.length <= 1) return;
-    
-    var cardWidth = (vis[0] ? vis[0].offsetWidth + 24 : 360);
-    var activeIdx = Math.min(Math.round(car.scrollLeft / cardWidth), vis.length - 1);
-
-    vis.forEach(function(_, idx){
-      var dot = document.createElement('button');
-      dot.className = 'carousel-dot' + (idx === activeIdx ? ' active' : '');
-      dot.setAttribute('aria-label', 'Ir para o item ' + (idx + 1));
-      dot.addEventListener('click', function(){
-        car.scrollTo({ left: idx * cardWidth, behavior: 'smooth' });
-      });
-      dotsContainer.appendChild(dot);
-    });
-  }
-
-  if(car){
-    if(prevBtn){
-      prevBtn.addEventListener('click', function(){
-        var vis = getVisibleCards();
-        var cardW = (vis[0] ? vis[0].offsetWidth + 24 : 360);
-        car.scrollBy({ left: -cardW, behavior: 'smooth' });
-      });
-    }
-    if(nextBtn){
-      nextBtn.addEventListener('click', function(){
-        var vis = getVisibleCards();
-        var cardW = (vis[0] ? vis[0].offsetWidth + 24 : 360);
-        car.scrollBy({ left: cardW, behavior: 'smooth' });
-      });
-    }
-
-    // Scroll listener with throttle for dot updates
-    var dotTicking = false;
-    car.addEventListener('scroll', function(){
-      if(!dotTicking){
-        dotTicking = true;
-        requestAnimationFrame(function(){
-          var vis = getVisibleCards();
-          if(vis.length && dotsContainer){
-            var cardWidth = vis[0].offsetWidth + 24;
-            var activeIdx = Math.min(Math.round(car.scrollLeft / cardWidth), vis.length - 1);
-            var allDots = dotsContainer.querySelectorAll('.carousel-dot');
-            allDots.forEach(function(d, i){
-              d.classList.toggle('active', i === activeIdx);
-            });
-          }
-          dotTicking = false;
-        });
-      }
-    }, {passive: true});
-
-    // Wi-Fi Password 1-Click Copy
-    var wifiBtn = document.getElementById('wifi-copy');
-    var wifiLabel = document.getElementById('wifi-label');
-    if(wifiBtn && wifiLabel){
-      wifiBtn.addEventListener('click', function(e){
-        e.preventDefault();
-        navigator.clipboard.writeText('morteaosextraforte').then(function(){
-          var orig = wifiLabel.textContent;
-          wifiLabel.textContent = 'Copiado! ✓';
-          wifiBtn.style.background = 'var(--red)';
-          wifiBtn.style.borderColor = 'var(--red)';
-          setTimeout(function(){
-            wifiLabel.textContent = orig;
-            wifiBtn.style.background = '';
-            wifiBtn.style.borderColor = '';
-          }, 2000);
-        }).catch(function(){
-          alert('Senha do Wi-Fi: morteaosextraforte');
-        });
-      });
-    }
-
-    // Category Tabs filter
-    catTabs.forEach(function(tab){
-      tab.addEventListener('click', function(){
-        catTabs.forEach(function(t){
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        
-        var cat = tab.dataset.cat;
-        cards.forEach(function(card){
-          var match = (cat === 'all' || card.dataset.cat === cat);
-          card.classList.toggle('hide', !match);
-        });
-
-        car.scrollTo({ left: 0, behavior: 'smooth' });
-        updateDots();
-      });
-    });
-
-    updateDots();
-    window.addEventListener('resize', updateDots, {passive: true});
-  }
-})();
-
-(function(){
-  if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-  document.documentElement.classList.add('js');
-  
-  // Kinetic reveal of headlines on scroll entry (Impossible Foods style)
-  var rvTitles = document.querySelectorAll('.rv-title, .h-lg, .h, .display');
-  var rvEyebrows = document.querySelectorAll('.rv-eyebrow');
-
-  var observer = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        entry.target.classList.add('in');
-        var lines = entry.target.querySelectorAll('.title-line');
-        lines.forEach(function(line, idx){
-          setTimeout(function(){
-            line.classList.add('in');
-          }, idx * 90);
-        });
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-  rvTitles.forEach(function(el){ observer.observe(el); });
-  rvEyebrows.forEach(function(el){ observer.observe(el); });
-
-  // 1. Hero Cup interactive 3D mouse parallax (Desktop: Cup between PORTO & FARRÔ)
+  // 1. Hero Cup interactive 3D mouse parallax (Desktop)
   var heroSection = document.getElementById('hero-section');
   var heroCup = document.getElementById('hero-cup-interactive');
   if(heroSection && heroCup){
@@ -2543,7 +2395,6 @@ footer a:hover{color:var(--white);text-decoration:underline}
     });
 
     function renderShowcase(){
-      var scrollY = window.pageYOffset || document.documentElement.scrollTop;
       var showcaseRect = showcase.getBoundingClientRect();
       var showcaseProgress = Math.max(-1, Math.min(1, (window.innerHeight - showcaseRect.top) / (window.innerHeight + showcaseRect.height) - 0.5));
 
@@ -2575,7 +2426,7 @@ footer a:hover{color:var(--white);text-decoration:underline}
     requestAnimationFrame(renderShowcase);
   }
 
-  // CAROUSEL CATALOG (IMPOSSIBLE FOODS STYLE)
+  // 3. CAROUSEL CATALOG (PRECISION NAVIGATION & DOTS FOR ALL 26 ITEMS)
   var car = document.getElementById('catalog-carousel');
   var prevBtn = document.getElementById('car-prev');
   var nextBtn = document.getElementById('car-next');
@@ -2587,21 +2438,49 @@ footer a:hover{color:var(--white);text-decoration:underline}
     return cards.filter(function(c){ return !c.classList.contains('hide'); });
   }
 
+  function getActiveCardIndex(){
+    var vis = getVisibleCards();
+    if(!vis.length) return 0;
+    var carRect = car.getBoundingClientRect();
+    var carCenter = carRect.left + carRect.width / 2;
+    var closestIdx = 0;
+    var closestDist = Infinity;
+    vis.forEach(function(card, idx){
+      var cardRect = card.getBoundingClientRect();
+      var cardCenter = cardRect.left + cardRect.width / 2;
+      var dist = Math.abs(carCenter - cardCenter);
+      if(dist < closestDist){
+        closestDist = dist;
+        closestIdx = idx;
+      }
+    });
+    return closestIdx;
+  }
+
+  function scrollToCard(idx){
+    var vis = getVisibleCards();
+    if(!vis.length) return;
+    var targetIdx = Math.max(0, Math.min(idx, vis.length - 1));
+    var targetCard = vis[targetIdx];
+    if(targetCard){
+      targetCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }
+
   function updateDots(){
     if(!dotsContainer || !car) return;
     dotsContainer.innerHTML = '';
     var vis = getVisibleCards();
     if(vis.length <= 1) return;
     
-    var cardWidth = (vis[0] ? vis[0].offsetWidth + 24 : 360);
-    var activeIdx = Math.min(Math.round(car.scrollLeft / cardWidth), vis.length - 1);
+    var activeIdx = getActiveCardIndex();
 
     vis.forEach(function(_, idx){
       var dot = document.createElement('button');
       dot.className = 'carousel-dot' + (idx === activeIdx ? ' active' : '');
       dot.setAttribute('aria-label', 'Ir para o item ' + (idx + 1));
       dot.addEventListener('click', function(){
-        car.scrollTo({ left: idx * cardWidth, behavior: 'smooth' });
+        scrollToCard(idx);
       });
       dotsContainer.appendChild(dot);
     });
@@ -2610,16 +2489,14 @@ footer a:hover{color:var(--white);text-decoration:underline}
   if(car){
     if(prevBtn){
       prevBtn.addEventListener('click', function(){
-        var vis = getVisibleCards();
-        var cardW = (vis[0] ? vis[0].offsetWidth + 24 : 360);
-        car.scrollBy({ left: -cardW, behavior: 'smooth' });
+        var currentIdx = getActiveCardIndex();
+        scrollToCard(currentIdx - 1);
       });
     }
     if(nextBtn){
       nextBtn.addEventListener('click', function(){
-        var vis = getVisibleCards();
-        var cardW = (vis[0] ? vis[0].offsetWidth + 24 : 360);
-        car.scrollBy({ left: cardW, behavior: 'smooth' });
+        var currentIdx = getActiveCardIndex();
+        scrollToCard(currentIdx + 1);
       });
     }
 
@@ -2631,8 +2508,7 @@ footer a:hover{color:var(--white);text-decoration:underline}
         requestAnimationFrame(function(){
           var vis = getVisibleCards();
           if(vis.length && dotsContainer){
-            var cardWidth = vis[0].offsetWidth + 24;
-            var activeIdx = Math.min(Math.round(car.scrollLeft / cardWidth), vis.length - 1);
+            var activeIdx = getActiveCardIndex();
             var allDots = dotsContainer.querySelectorAll('.carousel-dot');
             allDots.forEach(function(d, i){
               d.classList.toggle('active', i === activeIdx);
@@ -2642,28 +2518,6 @@ footer a:hover{color:var(--white);text-decoration:underline}
         });
       }
     }, {passive: true});
-
-    // Wi-Fi Password 1-Click Copy
-    var wifiBtn = document.getElementById('wifi-copy');
-    var wifiLabel = document.getElementById('wifi-label');
-    if(wifiBtn && wifiLabel){
-      wifiBtn.addEventListener('click', function(e){
-        e.preventDefault();
-        navigator.clipboard.writeText('morteaosextraforte').then(function(){
-          var orig = wifiLabel.textContent;
-          wifiLabel.textContent = 'Copiado! ✓';
-          wifiBtn.style.background = 'var(--red)';
-          wifiBtn.style.borderColor = 'var(--red)';
-          setTimeout(function(){
-            wifiLabel.textContent = orig;
-            wifiBtn.style.background = '';
-            wifiBtn.style.borderColor = '';
-          }, 2000);
-        }).catch(function(){
-          alert('Senha do Wi-Fi: morteaosextraforte');
-        });
-      });
-    }
 
     // Category Tabs filter
     catTabs.forEach(function(tab){
@@ -2681,13 +2535,43 @@ footer a:hover{color:var(--white);text-decoration:underline}
           card.classList.toggle('hide', !match);
         });
 
+        // Retorna ao primeiro item da categoria e recalcula os dots
         car.scrollTo({ left: 0, behavior: 'smooth' });
-        updateDots();
+        setTimeout(function(){
+          updateDots();
+        }, 150);
       });
     });
 
     updateDots();
     window.addEventListener('resize', updateDots, {passive: true});
+
+    // Wi-Fi Password 1-Click Copy
+    var wifiBtn = document.getElementById('wifi-copy');
+    var wifiLabel = document.getElementById('wifi-label');
+    if(wifiBtn && wifiLabel){
+      wifiBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        var pass = 'morteaosextraforte';
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(pass).then(function(){
+            var orig = wifiLabel.textContent;
+            wifiLabel.textContent = 'Copiado! ✓';
+            wifiBtn.style.background = '#25D366';
+            wifiBtn.style.borderColor = '#25D366';
+            setTimeout(function(){
+              wifiLabel.textContent = orig;
+              wifiBtn.style.background = '';
+              wifiBtn.style.borderColor = '';
+            }, 2500);
+          }).catch(function(){
+            alert('Senha do Wi-Fi: morteaosextraforte');
+          });
+        } else {
+          alert('Senha do Wi-Fi: morteaosextraforte');
+        }
+      });
+    }
   }
 })();
 
@@ -2696,10 +2580,8 @@ footer a:hover{color:var(--white);text-decoration:underline}
   document.documentElement.classList.add('js');
   
   // Kinetic reveal of headlines on scroll entry (Impossible Foods style)
-  var rvTitles = document.querySelectorAll('.rv-title, .h-lg, .h, .display');
-  var rvEyebrows = document.querySelectorAll('.rv-eyebrow');
-
-  var observer = new IntersectionObserver(function(entries){
+  var rvTitles = document.querySelectorAll('.rv-title, .rv-eyebrow, .card');
+  var io = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
       if(entry.isIntersecting){
         entry.target.classList.add('in');
@@ -2711,101 +2593,9 @@ footer a:hover{color:var(--white);text-decoration:underline}
         });
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.15 });
 
-  rvTitles.forEach(function(el){ observer.observe(el); });
-  rvEyebrows.forEach(function(el){ observer.observe(el); });
-
-  // Impossible Foods Hero Visual Animations:
-  // 1. Differential scroll parallax
-  // 2. Headline kinetic zoom & fade
-  // 3. Mouse-tracking 3D interactive parallax
-  // 4. Subtle continuous floating idle physics
-  var hero = document.getElementById('hero-section') || document.querySelector('.hero');
-  var blobs = [].slice.call(document.querySelectorAll('.blob'));
-  var h1 = document.querySelector('.hero h1');
-  
-  if(hero && blobs.length){
-    var speeds = [-.26, -.14, .18, .28];
-    var spins = [.06, -.05, .07, -.05];
-    var baseAngles = [-12, 9, 18, -20];
-    var mouseFactors = [
-      { x: -18, y: -16 },
-      { x: 22, y: -18 },
-      { x: -16, y: 18 },
-      { x: 20, y: 22 }
-    ];
-
-    var targetMouseX = 0, targetMouseY = 0;
-    var currentMouseX = 0, currentMouseY = 0;
-
-    hero.addEventListener('mousemove', function(e){
-      var rect = hero.getBoundingClientRect();
-      var relX = (e.clientX - rect.left) / rect.width - 0.5;
-      var relY = (e.clientY - rect.top) / rect.height - 0.5;
-      targetMouseX = relX * 2;
-      targetMouseY = relY * 2;
-    }, {passive: true});
-
-    hero.addEventListener('mouseleave', function(){
-      targetMouseX = 0;
-      targetMouseY = 0;
-    });
-
-    // Interactive hover feedback on each blob
-    blobs.forEach(function(b){
-      b.addEventListener('mouseenter', function(){
-        b.style.filter = 'drop-shadow(0 22px 40px rgba(0,0,0,.9)) drop-shadow(0 0 18px rgba(225,6,0,.45))';
-      });
-      b.addEventListener('mouseleave', function(){
-        b.style.filter = '';
-      });
-    });
-
-    var time = 0;
-    function renderLoop(){
-      time += 0.02;
-      var y = Math.min(window.scrollY, 1200);
-
-      // Smooth mouse lerp
-      currentMouseX += (targetMouseX - currentMouseX) * 0.08;
-      currentMouseY += (targetMouseY - currentMouseY) * 0.08;
-
-      if(y < 1100){
-        // Headline kinetic scroll zoom & fade
-        var p = Math.min(y / 650, 1);
-        if(h1){
-          var tiltX = currentMouseX * 6;
-          var tiltY = currentMouseY * 4;
-          h1.style.transform = 'scale(' + (1 + p * 0.12) + ') translate(' + tiltX.toFixed(2) + 'px, ' + (y * 0.15 + tiltY).toFixed(2) + 'px)';
-          h1.style.opacity = Math.max(0, 1 - p * 0.88);
-        }
-
-        // Animate each blob with combined scroll + mouse + sine float
-        blobs.forEach(function(b, i){
-          // Idle floating oscillation
-          var floatX = Math.sin(time + i * 1.5) * 5;
-          var floatY = Math.cos(time + i * 1.8) * 6;
-
-          // Mouse parallax offset
-          var mouseX = currentMouseX * mouseFactors[i].x;
-          var mouseY = currentMouseY * mouseFactors[i].y;
-
-          // Scroll parallax & spin
-          var scrollYOffset = y * speeds[i];
-          var totalRotate = baseAngles[i] + (y * spins[i]) + Math.sin(time * 0.8 + i) * 2;
-
-          var totalX = floatX + mouseX;
-          var totalY = scrollYOffset + floatY + mouseY;
-
-          b.style.transform = 'translate(' + totalX.toFixed(2) + 'px, ' + totalY.toFixed(2) + 'px) rotate(' + totalRotate.toFixed(2) + 'deg)';
-        });
-      }
-
-      requestAnimationFrame(renderLoop);
-    }
-    requestAnimationFrame(renderLoop);
-  }
+  rvTitles.forEach(function(el){ io.observe(el); });
 })();
 </script>
 </body>
