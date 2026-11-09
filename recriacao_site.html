@@ -95,7 +95,8 @@ section{padding:72px 0}
 
 
 
-/* HERO MONUMENTAL: DESKTOP COM XÍCARA ENTRE AS DUAS PALAVRAS; MOBILE COM XÍCARA EM CIMA E PORTO FARRÔ EM BAIXO SEM CONTORNO */
+
+/* HERO MONUMENTAL: XÍCARA E PALAVRAS BEM COLADAS E INTEGRADAS */
 .hero-monumental{
   position:relative;
   background:radial-gradient(circle at 50% 50%, #3a031c 0%, var(--black) 85%);
@@ -113,7 +114,7 @@ section{padding:72px 0}
 }
 
 .hero-monumental .eyebrow{
-  margin-bottom:clamp(20px, 3vw, 40px);
+  margin-bottom:clamp(16px, 2.5vw, 32px);
   color:var(--blush);
   font-size:clamp(12px, 1.4vw, 15px);
   letter-spacing:.12em;
@@ -124,12 +125,12 @@ section{padding:72px 0}
   z-index:4;
 }
 
-/* DESKTOP LAYOUT: PORTO [ XÍCARA ] FARRÔ EM LINHA HORIZONTAL */
+/* DESKTOP LAYOUT: PORTO [ XÍCARA ] FARRÔ BEM COLADOS */
 .hero-desktop-stage{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:clamp(16px, 2.5vw, 40px);
+  gap:0;
   width:100%;
   max-width:1440px;
   user-select:none;
@@ -147,6 +148,9 @@ section{padding:72px 0}
   letter-spacing:0.02em;
   text-shadow:0 14px 40px rgba(0,0,0,0.85);
   margin:0;
+  margin-right:clamp(-28px, -2.8vw, -14px);
+  position:relative;
+  z-index:2;
   display:inline-block;
   transition:transform .3s ease;
 }
@@ -160,15 +164,18 @@ section{padding:72px 0}
   letter-spacing:0.02em;
   text-shadow:0 14px 40px rgba(0,0,0,0.85);
   margin:0;
+  margin-left:clamp(-24px, -2.4vw, -12px);
+  position:relative;
+  z-index:2;
   display:inline-block;
   transition:transform .3s ease;
 }
 
 .hero-desktop-stage:hover .hero-word-porto{
-  transform:translateX(-3px);
+  transform:translateX(-4px);
 }
 .hero-desktop-stage:hover .hero-word-farro{
-  transform:translateX(3px);
+  transform:translateX(4px);
 }
 
 .hero-cup-between{
@@ -196,7 +203,7 @@ section{padding:72px 0}
   100% { transform: translateY(0px) rotate(0deg); }
 }
 
-/* MOBILE LAYOUT: XÍCARA EM CIMA E PORTO FARRÔ EM BAIXO (SEM CONTORNO/SEM ARCO) */
+/* MOBILE LAYOUT: XÍCARA EM CIMA E PORTO FARRÔ BEM COLADO LOGO ABAIXO */
 .hero-mobile-stage{
   display:none;
   flex-direction:column;
@@ -212,8 +219,10 @@ section{padding:72px 0}
   width:min(68vw, 260px);
   height:min(68vw, 260px);
   position:relative;
-  margin-bottom:20px;
+  /* Margem negativa estratégica para absorver o respiro transparente do PNG e colar no texto */
+  margin-bottom:clamp(-38px, -9.5vw, -24px);
   filter:drop-shadow(0 20px 45px rgba(0,0,0,0.92));
+  z-index:2;
 }
 
 .hero-mobile-cup img{
@@ -228,33 +237,35 @@ section{padding:72px 0}
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:2px;
-  line-height:0.88;
+  gap:1px;
+  line-height:0.86;
+  position:relative;
+  z-index:3;
 }
 
 .m-word-porto{
   font-family:var(--display);
-  font-size:clamp(54px, 16vw, 84px);
+  font-size:clamp(56px, 16vw, 84px);
   font-weight:700;
   color:var(--white);
   text-transform:uppercase;
-  letter-spacing:0.03em;
+  letter-spacing:0.02em;
   text-shadow:0 10px 28px rgba(0,0,0,0.85);
   margin:0;
 }
 
 .m-word-farro{
   font-family:var(--display);
-  font-size:clamp(54px, 16vw, 84px);
+  font-size:clamp(56px, 16vw, 84px);
   font-weight:700;
   color:var(--red);
   text-transform:uppercase;
-  letter-spacing:0.03em;
+  letter-spacing:0.02em;
   text-shadow:0 10px 28px rgba(0,0,0,0.85);
   margin:0;
 }
 
-/* RESPONSIVIDADE (768px): Desktop Horizontal vs Mobile Stack Vertical */
+/* RESPONSIVIDADE (768px): Alternar entre Desktop e Mobile */
 @media (max-width: 768px){
   .hero-desktop-stage{
     display:none !important;
@@ -263,7 +274,7 @@ section{padding:72px 0}
     display:flex !important;
   }
   .hero-monumental .eyebrow{
-    margin-bottom:18px;
+    margin-bottom:14px;
     font-size:12px;
   }
 }
