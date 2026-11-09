@@ -653,10 +653,12 @@ section{padding:72px 0}
   overflow-x:auto;
   scroll-snap-type:x mandatory;
   scroll-behavior:smooth;
-  padding:20px max(48px, calc(50% - min(185px, 42vw))) 30px;
+  padding:20px 10px 30px;
   scrollbar-width:none;
   -webkit-overflow-scrolling:touch;
 }
+.car::-webkit-scrollbar{display:none}
+
 .card{
   flex:0 0 min(370px, 84vw);
   width:min(370px, 84vw);
@@ -664,7 +666,7 @@ section{padding:72px 0}
   max-width:min(370px, 84vw);
   min-height:480px;
   box-sizing:border-box;
-  scroll-snap-align:center;
+  scroll-snap-align:start;
   background:var(--burgundy);
   border:1px solid rgba(0,0,0,.6);
   border-radius:var(--r-card);
@@ -672,9 +674,14 @@ section{padding:72px 0}
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  transition:transform .3s ease, box-shadow .3s ease, opacity .3s ease;
+  transition:transform .3s ease, box-shadow .3s ease, opacity .3s ease, border-color .3s ease;
   position:relative;
   text-align:left;
+}
+.card:hover, .card.active-card{
+  transform:translateY(-6px);
+  box-shadow:0 18px 36px rgba(0,0,0,.6);
+  border-color:rgba(225,6,0,.65);
 }
 .card.hide{display:none !important}
 
@@ -2426,45 +2433,69 @@ footer a:hover{color:var(--white);text-decoration:underline}
     requestAnimationFrame(renderShowcase);
   }
 
-  // 3. CAROUSEL CATALOG (PRECISION NAVIGATION & DOTS FOR ALL 26 ITEMS)
+  // 3. CAROUSEL CATALOG (FLUSH EDGES, CLEAN START/END & PRECISION NAVIGATION)
   var car = document.getElementById('catalog-carousel');
   var prevBtn = document.getElementById('car-prev');
   var nextBtn = document.getElementById('car-next');
   var catTabs = document.querySelectorAll('.cat-tab');
   var dotsContainer = document.getElementById('carousel-dots');
   var cards = car ? [].slice.call(car.querySelectorAll('.card')) : [];
+  var currentIdx = 0;
+  var isProgrammaticScroll = false;
+  var scrollTimeout = null;
 
   function getVisibleCards(){
     return cards.filter(function(c){ return !c.classList.contains('hide'); });
   }
 
-  function getActiveCardIndex(){
+  function setActiveCard(idx){
     var vis = getVisibleCards();
-    if(!vis.length) return 0;
-    var carRect = car.getBoundingClientRect();
-    var carCenter = carRect.left + carRect.width / 2;
-    var closestIdx = 0;
-    var closestDist = Infinity;
-    vis.forEach(function(card, idx){
-      var cardRect = card.getBoundingClientRect();
-      var cardCenter = cardRect.left + cardRect.width / 2;
-      var dist = Math.abs(carCenter - cardCenter);
-      if(dist < closestDist){
-        closestDist = dist;
-        closestIdx = idx;
-      }
-    });
-    return closestIdx;
+    if(!vis.length) return;
+    idx = Math.max(0, Math.min(idx, vis.length - 1));
+    currentIdx = idx;
+
+    if(dotsContainer){
+      var allDots = dotsContainer.querySelectorAll('.carousel-dot');
+      allDots.forEach(function(d, i){
+        d.classList.toggle('active', i === currentIdx);
+      });
+    }
+
+    cards.forEach(function(c){ c.classList.remove('active-card'); });
+    if(vis[currentIdx]){
+      vis[currentIdx].classList.add('active-card');
+    }
   }
 
   function scrollToCard(idx){
     var vis = getVisibleCards();
-    if(!vis.length) return;
-    var targetIdx = Math.max(0, Math.min(idx, vis.length - 1));
-    var targetCard = vis[targetIdx];
-    if(targetCard){
-      targetCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    if(!vis.length || !car) return;
+    idx = Math.max(0, Math.min(idx, vis.length - 1));
+    setActiveCard(idx);
+
+    var targetCard = vis[idx];
+    if(!targetCard) return;
+
+    var maxScroll = car.scrollWidth - car.clientWidth;
+    if(maxScroll <= 0) return;
+
+    var targetLeft;
+    if(idx === 0){
+      targetLeft = 0;
+    } else if(idx === vis.length - 1){
+      targetLeft = maxScroll;
+    } else {
+      targetLeft = targetCard.offsetLeft - car.offsetLeft - 10;
+      targetLeft = Math.max(0, Math.min(targetLeft, maxScroll));
     }
+
+    isProgrammaticScroll = true;
+    clearTimeout(scrollTimeout);
+    car.scrollTo({ left: targetLeft, behavior: 'smooth' });
+
+    scrollTimeout = setTimeout(function(){
+      isProgrammaticScroll = false;
+    }, 550);
   }
 
   function updateDots(){
@@ -2472,12 +2503,10 @@ footer a:hover{color:var(--white);text-decoration:underline}
     dotsContainer.innerHTML = '';
     var vis = getVisibleCards();
     if(vis.length <= 1) return;
-    
-    var activeIdx = getActiveCardIndex();
 
     vis.forEach(function(_, idx){
       var dot = document.createElement('button');
-      dot.className = 'carousel-dot' + (idx === activeIdx ? ' active' : '');
+      dot.className = 'carousel-dot' + (idx === currentIdx ? ' active' : '');
       dot.setAttribute('aria-label', 'Ir para o item ' + (idx + 1));
       dot.addEventListener('click', function(){
         scrollToCard(idx);
@@ -2489,31 +2518,46 @@ footer a:hover{color:var(--white);text-decoration:underline}
   if(car){
     if(prevBtn){
       prevBtn.addEventListener('click', function(){
-        var currentIdx = getActiveCardIndex();
-        scrollToCard(currentIdx - 1);
+        var vis = getVisibleCards();
+        if(!vis.length) return;
+        var newIdx = Math.max(0, currentIdx - 1);
+        scrollToCard(newIdx);
       });
     }
     if(nextBtn){
       nextBtn.addEventListener('click', function(){
-        var currentIdx = getActiveCardIndex();
-        scrollToCard(currentIdx + 1);
+        var vis = getVisibleCards();
+        if(!vis.length) return;
+        var newIdx = Math.min(vis.length - 1, currentIdx + 1);
+        scrollToCard(newIdx);
       });
     }
 
-    // Scroll listener with throttle for dot updates
+    // Scroll listener with throttle for manual scrolling (touch/drag/wheel)
     var dotTicking = false;
     car.addEventListener('scroll', function(){
+      if(isProgrammaticScroll) return;
       if(!dotTicking){
         dotTicking = true;
         requestAnimationFrame(function(){
           var vis = getVisibleCards();
-          if(vis.length && dotsContainer){
-            var activeIdx = getActiveCardIndex();
-            var allDots = dotsContainer.querySelectorAll('.carousel-dot');
-            allDots.forEach(function(d, i){
-              d.classList.toggle('active', i === activeIdx);
-            });
+          if(!vis.length || !car){
+            dotTicking = false;
+            return;
           }
+          var maxScroll = car.scrollWidth - car.clientWidth;
+          var activeIdx = 0;
+          if(maxScroll <= 0){
+            activeIdx = 0;
+          } else if(car.scrollLeft <= 15){
+            activeIdx = 0;
+          } else if(car.scrollLeft >= maxScroll - 15){
+            activeIdx = vis.length - 1;
+          } else {
+            var cardW = (vis[0] ? vis[0].offsetWidth + 24 : 394);
+            activeIdx = Math.min(Math.round(car.scrollLeft / cardW), vis.length - 1);
+          }
+          setActiveCard(activeIdx);
           dotTicking = false;
         });
       }
@@ -2535,16 +2579,21 @@ footer a:hover{color:var(--white);text-decoration:underline}
           card.classList.toggle('hide', !match);
         });
 
-        // Retorna ao primeiro item da categoria e recalcula os dots
+        currentIdx = 0;
         car.scrollTo({ left: 0, behavior: 'smooth' });
         setTimeout(function(){
           updateDots();
-        }, 150);
+          setActiveCard(0);
+        }, 100);
       });
     });
 
     updateDots();
-    window.addEventListener('resize', updateDots, {passive: true});
+    setActiveCard(0);
+    window.addEventListener('resize', function(){
+      updateDots();
+      setActiveCard(currentIdx);
+    }, {passive: true});
 
     // Wi-Fi Password 1-Click Copy
     var wifiBtn = document.getElementById('wifi-copy');
@@ -2579,7 +2628,7 @@ footer a:hover{color:var(--white);text-decoration:underline}
   if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
   document.documentElement.classList.add('js');
   
-  // Kinetic reveal of headlines on scroll entry (Impossible Foods style)
+  // Kinetic reveal of headlines on scroll entry
   var rvTitles = document.querySelectorAll('.rv-title, .rv-eyebrow, .card');
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
